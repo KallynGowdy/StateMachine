@@ -36,6 +36,10 @@ namespace KallynGowdy.StateMachine
 
             private List<IGroup> completedGroups;
 
+            /// <summary>
+            /// Creates a new DeterministicFiniteAutoma builder.
+            /// </summary>
+            /// <param name="startState"></param>
             public Builder(int startState = 0)
             {
                 groups = new Dictionary<string, int>();
@@ -90,35 +94,60 @@ namespace KallynGowdy.StateMachine
                 return automa;
             }
 
+            /// <summary>
+            /// Moves the location of this builder in the graph back to a state that leads to the current state based on the given key.
+            /// </summary>
+            /// <param name="key">The key that defines the transition between the state to move back to and this state.</param>
+            /// <returns></returns>
             public Builder Back(T key)
             {
                 CurrentNode = CurrentNode.FindToTransition(key);
                 return this;
             }
 
+            /// <summary>
+            /// Gets the state node that this builder is currently at.
+            /// </summary>
             public StateNode<T, int> CurrentNode
             {
                 get;
                 private set;
             }
 
+            /// <summary>
+            /// Gets the graph that is currently being built.
+            /// </summary>
             public StateGraph<T, int> Graph
             {
                 get;
                 private set;
             }
 
+            /// <summary>
+            /// Creates transitions to the given collection of nodes using the keys as transition values.
+            /// </summary>
+            /// <param name="nodes">
+            /// A collection of KeyValuePair objects where the keys are the transition value(that is, the value causes the DFA machine to move the given node)
+            /// and the values are the states to move to.
+            /// </param>
+            /// <returns>This builder object.</returns>
             public Builder To(IEnumerable<KeyValuePair<T, StateNode<T, int>>> nodes)
             {
-
                 foreach (KeyValuePair<T, StateNode<T, int>> keyVal in nodes)
                 {
                     CurrentNode.AddTransition(keyVal.Key, keyVal.Value);
-
                 }
                 return this;
             }
 
+            /// <summary>
+            /// Creates transitions to the given collection of nodes using the keys as transition values.
+            /// </summary>
+            /// <param name="nodes">
+            /// A collection of KeyValuePair objects where the keys are the transition value(that is, the value causes the DFA machine to move the given node)
+            /// and the values are the value of the state to generate.
+            /// </param>
+            /// <returns>This builder object.</returns>
             public Builder To(IEnumerable<KeyValuePair<T, int>> nodes)
             {
                 foreach (KeyValuePair<T, int> keyVal in nodes)
@@ -140,8 +169,8 @@ namespace KallynGowdy.StateMachine
             /// <summary>
             /// Adds a transition from the current state to the given state based on the given key and then moves to the created state.
             /// </summary>
-            /// <param name="key"></param>
-            /// <param name="node"></param>
+            /// <param name="key">The key of the transition to create.</param>
+            /// <param name="node">The state node to move to.</param>
             /// <returns></returns>
             public Builder To(T key, StateNode<T, int> node)
             {
@@ -153,8 +182,8 @@ namespace KallynGowdy.StateMachine
             /// <summary>
             /// Adds a transition from the current state to the given state based on the key and value and then moves to the created state.
             /// </summary>
-            /// <param name="key"></param>
-            /// <param name="value"></param>
+            /// <param name="key">The key of the transition to create.</param>
+            /// <param name="value">The value of the state to create.</param>
             /// <returns></returns>
             public Builder To(T key, int value)
             {
@@ -189,7 +218,10 @@ namespace KallynGowdy.StateMachine
                 return this;
             }
 
-
+            /// <summary>
+            /// Builds this object into a completed state graph.
+            /// </summary>
+            /// <returns></returns>
             StateGraph<T, int> IStateGraphBuilder<Builder, T, int>.Build()
             {
                 endAllGroups();
@@ -208,10 +240,20 @@ namespace KallynGowdy.StateMachine
             private set;
         }
 
+        /// <summary>
+        /// An event that is invoked when a group is entered.
+        /// </summary>
         public event Action<IGroup> OnGroupEntered;
 
+        /// <summary>
+        /// An event that is invoked when a group is exited.
+        /// </summary>
         public event Action<IGroup, IEnumerable<T>> OnGroupExited;
 
+        /// <summary>
+        /// Creates a new DFA engine using the given graph.
+        /// </summary>
+        /// <param name="graph"></param>
         public DeterministicFiniteAutoma(StateGraph<T, int> graph)
         {
             this.stateMachine = graph;
@@ -264,7 +306,6 @@ namespace KallynGowdy.StateMachine
                 }
             }
         }
-
 
         private void invokeOnGroupExited(KeyValuePair<IGroup, List<T>> group)
         {

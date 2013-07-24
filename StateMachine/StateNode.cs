@@ -125,70 +125,6 @@ namespace KallynGowdy.StateMachine
         }
 
         /// <summary>
-        /// Determines if the given node is contained by this node.
-        /// </summary>
-        /// <param name="node"></param>
-        /// <returns></returns>
-        //public bool ContainsFromTransition(StateNode<TKey, T> node)
-        //{
-        //    if (!fromTransitions.Values.Contains(node))
-        //    {
-        //        foreach (var transition in fromTransitions)
-        //        {
-        //            if (transition.Value.Equals(node))
-        //            {
-        //                return true;
-        //            }
-        //        }
-        //        foreach (var transition in fromTransitions)
-        //        {
-        //            if (transition.Value.ContainsFromTransition(node))
-        //            {
-        //                return true;
-        //            }
-        //        }
-        //    }
-        //    else
-        //    {
-        //        return true;
-        //    }
-        //    return false;
-        //}
-
-        /// <summary>
-        /// Returns whether a node is contained by this node(and linked "from" nodes).
-        /// </summary>
-        /// <param name="comparer">The predicate used to determine if a node is contained.</param>
-        /// <returns></returns>
-        //public bool ContainsFromTransition(Predicate<StateNode<TKey, T>> comparer)
-        //{
-        //    //if it is not contained
-        //    if (fromTransitions.All(a => !comparer(a.Value)))
-        //    {
-        //        foreach (var transition in fromTransitions)
-        //        {
-        //            if (comparer(transition.Value))
-        //            {
-        //                return true;
-        //            }
-        //        }
-        //        //loop through transitions and find it
-        //        foreach (var transition in fromTransitions)
-        //        {
-        //            if (transition.Value.containsFromTransition(comparer))
-        //            {
-        //                return true;
-        //            }
-        //        }
-        //    }
-        //    else
-        //    {
-        //        return true;
-        //    }
-        //    return false;
-        //}
-
-        /// <summary>
         /// Gets the depth first traversal of the children of this node.
         /// </summary>
         /// <exception cref="System.StackOverflowException"/>
@@ -211,20 +147,34 @@ namespace KallynGowdy.StateMachine
             return traversal;
         }
 
+        /// <summary>
+        /// Defines a queue that contains markers.
+        /// </summary>
+        /// <typeparam name="Type"></typeparam>
         private class MarkerQueue<Type>
         {
+            /// <summary>
+            /// Gets the internal queue that this object uses.
+            /// </summary>
             public Queue<Marker<Type>> Queue
             {
                 get;
                 private set;
             }
 
+            /// <summary>
+            /// Creates a new MarkerQueue object.
+            /// </summary>
             public MarkerQueue()
             {
                 Queue = new Queue<Marker<Type>>();
             }
         }
 
+        /// <summary>
+        /// Defines a marker that determines if the value has already been visited.
+        /// </summary>
+        /// <typeparam name="Type"></typeparam>
         private struct Marker<Type>
         {
             /// <summary>
@@ -245,6 +195,11 @@ namespace KallynGowdy.StateMachine
                 set;
             }
 
+            /// <summary>
+            /// Creates a new marker with the given value and marked setting.
+            /// </summary>
+            /// <param name="value">The value that the marker should hold.</param>
+            /// <param name="marked">Whether this object should be marked.</param>
             public Marker(Type value, bool marked = false)
                 : this()
             {
@@ -283,43 +238,6 @@ namespace KallynGowdy.StateMachine
         }
 
         /// <summary>
-        /// Returns whether a node is contained by this node(and linked "from" nodes).
-        /// </summary>
-        /// <param name="comparer"></param>
-        /// <param name="currentLoop"></param>
-        /// <param name="maxLoop"></param>
-        /// <returns></returns>
-        //private bool containsFromTransition(Predicate<StateNode<TKey, T>> comparer)
-        //{
-        //    //if it is not contained
-        //    if (fromTransitions.All(a => !comparer(a.Value)))
-        //    {
-
-        //        //loop through transitions and find it
-        //        foreach (var transition in fromTransitions)
-        //        {
-        //            if (comparer(transition.Value))
-        //            {
-        //                return true;
-        //            }
-        //        }
-        //        //loop through transitions and find it
-        //        foreach (var transition in fromTransitions)
-        //        {
-        //            if (containsFromTransition(comparer))
-        //            {
-        //                return true;
-        //            }
-        //        }
-        //    }
-        //    else
-        //    {
-        //        return true;
-        //    }
-        //    return false;
-        //}
-
-        /// <summary>
         /// Returns whether the given node is contained in a "from" transition.
         /// </summary>
         /// <param name="node"></param>
@@ -329,6 +247,11 @@ namespace KallynGowdy.StateMachine
             return GetBreadthFirstTraversal().Any(a => a == node);
         }
 
+        /// <summary>
+        /// Determines if this state contains a transition to another state based on the given key.
+        /// </summary>
+        /// <param name="key">The key of the transition.</param>
+        /// <returns></returns>
         public bool ContainsFromTransition(TKey key)
         {
             return fromTransitions.ContainsKey(key);
@@ -344,27 +267,12 @@ namespace KallynGowdy.StateMachine
             return GetBreadthFirstTraversal().Any(a => comparer(a));
         }
 
-        /// <summary>
-        /// Gets a node from the "from" transitions that matches comparer.
-        /// </summary>
-        /// <param name="comparer"></param>
-        /// <param name="maxLoop"></param>
-        /// <returns></returns>
-        //public StateNode<TKey, T> GetFromTransition(Predicate<StateNode<TKey, T>> comparer)
-        //{
-        //    StateNode<TKey, T> node = null;
-        //    ContainsFromTransition(a =>
-        //    {
-        //        if (comparer(a))
-        //        {
-        //            node = a;
-        //            return true;
-        //        }
-        //        return false;
-        //    });
-        //    return node;
-        //}
 
+        /// <summary>
+        /// Gets a state that this state transitions to based on the key.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public StateNode<TKey, T> this[TKey key]
         {
             get
@@ -392,28 +300,6 @@ namespace KallynGowdy.StateMachine
         {
             return GetBreadthFirstTraversal().FirstOrDefault(a => comparer(a));
         }
-
-        ///// <summary>
-        ///// Removes the Node at index from Transitions and returns the removed node with the stored key.
-        ///// </summary>
-        ///// <param name="index"></param>
-        ///// <returns></returns>
-        ///// <exception cref="System.ArgumentOutOfRangeException"/>
-        //public KeyValuePair<TKey, StateNode<TKey, T>> RemoveTransitionAt(int index)
-        //{
-        //    if (index < fromTransitions.Count && index >= 0)
-        //    {
-        //        KeyValuePair<TKey, StateNode<TKey, T>> pair = fromTransitions.ElementAt(index);
-        //        //remove the link
-        //        pair.Value.toTransitions.Remove(this);
-        //        fromTransitions.Remove(pair.Key);
-        //        return pair;
-        //    }
-        //    else
-        //    {
-        //        throw new ArgumentOutOfRangeException("index", "Must be greater than or equal to 0 and less than Transitions.Count");
-        //    }
-        //}
 
         /// <summary>
         /// Creates a new empty state.
@@ -449,6 +335,11 @@ namespace KallynGowdy.StateMachine
             this.Graph = graph;
         }
 
+        /// <summary>
+        /// Adds a transition between this state and a generated state based on the given key where the given value is the value of the generated state.
+        /// </summary>
+        /// <param name="key">The key that defines the transition.</param>
+        /// <param name="val">The value of the new state to create.</param>
         public void AddTransition(TKey key, T val)
         {
             fromTransitions.Add(key, new StateNode<TKey, T>(val));

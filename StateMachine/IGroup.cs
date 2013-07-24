@@ -22,11 +22,20 @@ namespace KallynGowdy.StateMachine
     /// </summary>
     public interface IGroup
     {
+        /// <summary>
+        /// Gets or sets the name of the group.
+        /// </summary>
         string Name
         {
             get;
             set;
         }
+
+        /// <summary>
+        /// Determines if the given state is contained in the group.
+        /// </summary>
+        /// <param name="state">The state.</param>
+        /// <returns>True if the given state is contained in the group, False if it is not.</returns>
         bool In(int state);
     }
 }

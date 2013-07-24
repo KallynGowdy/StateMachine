@@ -26,12 +26,20 @@ namespace KallynGowdy.StateMachine
     /// </summary>
     public class BetweenGroup : StateMachine.IGroup
     {
-
+        /// <summary>
+        /// Creates a new group that encapsulates a given range of states.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="range"></param>
         public BetweenGroup(string name, IFromTo<int> range)
         {
             this.Name = name;
             this.Range = range;
         }
+        
+        /// <summary>
+        /// Gets the range of states that this group encloses.
+        /// </summary>
         public IFromTo<int> Range
         {
             get;
@@ -47,11 +55,20 @@ namespace KallynGowdy.StateMachine
             set;
         }
 
+        /// <summary>
+        /// Determines if the given state is contained in this group.
+        /// </summary>
+        /// <param name="state"></param>
+        /// <returns></returns>
         public bool In(int state)
         {
             return Range.Between(state);
         }
 
+        /// <summary>
+        /// Gets the name of this group.
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return Name;
@@ -63,6 +80,24 @@ namespace KallynGowdy.StateMachine
     /// </summary>
     public class NumberedGroup : StateMachine.IGroup
     {
+        /// <summary>
+        /// Creates a new group with the given name and specific states that the group should contain.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="states"></param>
+        public NumberedGroup(string name, params int[] states)
+        {
+            if(name != null)
+            {
+                throw new ArgumentNullException("name");
+            }
+            this.Name = name;
+            States = new HashSet<int>(states);
+        }
+
+        /// <summary>
+        /// Gets the collection of states that this group contains.
+        /// </summary>
         public HashSet<int> States
         {
             get;
@@ -78,11 +113,20 @@ namespace KallynGowdy.StateMachine
             set;
         }
 
+        /// <summary>
+        /// Determines if the given state is contained in this group.
+        /// </summary>
+        /// <param name="state"></param>
+        /// <returns></returns>
         public bool In(int state)
         {
             return States.Contains(state);
         }
 
+        /// <summary>
+        /// Gets the name of this group.
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return Name;

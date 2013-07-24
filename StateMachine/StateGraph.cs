@@ -68,7 +68,6 @@ namespace KallynGowdy.StateMachine
         /// Determines if the graph contains a node that matches the given condition.
         /// </summary>
         /// <param name="condition">The condition that determines if a node is a match.</param>
-        /// <param name="maxLoop">The maximum number of nodes to travel to, this prevents infinite loops.</param>
         /// <returns></returns>
         public bool Contains(Predicate<StateNode<TKey, T>> condition)
         {
@@ -79,7 +78,6 @@ namespace KallynGowdy.StateMachine
         /// Gets the first node from the graph that node matches the given condition.
         /// </summary>
         /// <param name="condition">The condition that determines if a node is a match.</param>
-        /// <param name="maxLoop">The maximum number of nodes to travel to, this prevents infinite loops.</param>
         /// <returns></returns>
         public StateNode<TKey, T> FindExistingNode(Predicate<StateNode<TKey, T>> condition)
         {

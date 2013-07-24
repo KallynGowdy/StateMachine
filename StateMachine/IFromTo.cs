@@ -27,14 +27,26 @@ namespace KallynGowdy.StateMachine
     /// <typeparam name="T"></typeparam>
     public interface IFromTo<T> where T : IComparable<T>
     {
+        /// <summary>
+        /// Gets the first value in the range.
+        /// </summary>
         T First
         {
             get;
         }
+
+        /// <summary>
+        /// Gets the second value in the range.
+        /// </summary>
         T Second
         {
             get;
         }
+        /// <summary>
+        /// Determines whether the given value is contained in the range of values that this object stores.
+        /// </summary>
+        /// <param name="value">The value to compare to the range of values.</param>
+        /// <returns>True if the given value is in the range, otherwise false.</returns>
         bool Between(T value);
     }
 }

@@ -28,16 +28,24 @@ namespace KallynGowdy.StateMachine
     /// <typeparam name="TKey">The Type of the value that determines transitions between states.</typeparam>
     public class StateGraphBuilder<TKey, T> : StateMachine.IStateGraphBuilder<StateGraphBuilder<TKey, T>, TKey, T>
     {
-        protected StateNode<TKey, T> currentNode;
+        private StateNode<TKey, T> currentNode;
 
         /// <summary>
-        /// Gets the current node that the builder is at.
+        /// Gets (or protected sets) the current node that the builder is at.
         /// </summary>
         public StateNode<TKey, T> CurrentNode
         {
             get
             {
                 return currentNode;
+            }
+            protected set
+            {
+                if(value == null)
+                {
+                    throw new ArgumentNullException("value");
+                }
+                currentNode = value;
             }
         }
 
